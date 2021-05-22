@@ -2,8 +2,10 @@
   "name": "food-fight",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/bot.js",
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "JP7",
