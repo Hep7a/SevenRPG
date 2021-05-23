@@ -5,7 +5,7 @@ import { PlayerRepository } from "../../models/customRepos/PlayerRepo";
 import { Player } from "../../models/Players";
 import { CommandCategoryNames, ItemNames, NoPlayerMessage } from "../../structures/Constants";
 import { FFCommand } from "../../structures/Structures";
-import { calculateMaxXP, randomizeInt } from "../../structures/Util";
+import { calculateMaxXP, checkIfLevelUp, randomizeInt } from "../../structures/Util";
 
 export default class Mine extends FFCommand {
     constructor() {
@@ -31,20 +31,17 @@ export default class Mine extends FFCommand {
         const randomStone = randomizeInt(2, 1);
         const randomXP = randomizeInt(40, 35)
 
-        const xp = await playerRepo.addXP(player, randomXP);
+        const xp = await playerRepo.addXP(message.author.id, randomXP);
         await inventoryRepo.addItem(message.author.id, item.name, randomStone);
 
         message.util.send(`You picked up some few loose stones on the floor because you can't mine stone with your fists.\nYou got ${randomStone} stone and earnt ${randomXP}XP!`);
 
         const maxXP = calculateMaxXP(player.level);
 
-        if (xp >= maxXP) {
-            const newPlayer = await playerRepo.findOneByPlayer(message.author.id);
-            await playerRepo.update(newPlayer, {
-                xp: xp - maxXP
-            });
-            const newerPlayer = await playerRepo.findOneByPlayer(message.author.id)
-            const level = await playerRepo.levelUp(newerPlayer, 1)
+        const response = checkIfLevelUp(xp, maxXP);
+
+        if (response) {
+            const level = await playerRepo.levelUp(message.author.id, xp)
             message.util.send(`LEVEL UP! You are now **Level ${level}**!`);
         }
         else message.util.send(`You have ${maxXP - xp}/${maxXP}XP left until **Level ${player.level + 1}**. `)

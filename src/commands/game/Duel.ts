@@ -4,7 +4,7 @@ import { User } from "discord.js";
 import { PlayerRepository } from "../../models/customRepos/PlayerRepo";
 import { CommandCategoryNames, NoPlayerMessage } from "../../structures/Constants";
 import { DuelStats, FFCommand } from "../../structures/Structures";
-import { calculateMaxXP, randomizeInt } from "../../structures/Util";
+import { calculateMaxXP, checkIfLevelUp, randomizeInt } from "../../structures/Util";
 
 export default class Duel extends FFCommand {
     constructor() {
@@ -71,20 +71,16 @@ export default class Duel extends FFCommand {
                     const winnerCoins = winner.damage * 2.5;
                     const winnerXP = winner.damage * 1.5;
 
-                    const coins = await playerRepo.addCoins(playerEntity, winnerCoins);
-                    const xp = await playerRepo.addCoins(playerEntity, winnerXP);
+                    const coins = await playerRepo.addCoins(message.author.id, winnerCoins);
+                    const xp = await playerRepo.addXP(message.author.id, winnerXP);
 
                     message.util.send(`${winner.user.username} has earnt ${winnerCoins} and ${winnerXP}!`);
 
                     const maxXP = calculateMaxXP(playerEntity.level);
 
-                    if (xp >= maxXP) {
-                        const newPlayer = await playerRepo.findOneByPlayer(message.author.id);
-                        await playerRepo.update(newPlayer, {
-                            xp: xp - maxXP
-                        });
-                        const newerPlayer = await playerRepo.findOneByPlayer(message.author.id)
-                        const level = await playerRepo.levelUp(newerPlayer, 1)
+                    const response = checkIfLevelUp(xp, maxXP);
+                    if (response) {
+                        const level = await playerRepo.levelUp(message.author.id, xp)
                         message.util.send(`LEVEL UP! ${winner.user.username} is now **Level ${level}**!`);
                     }
                     else message.util.send(`${winner.user.username} has ${maxXP - xp}/${maxXP}XP left until **Level ${playerEntity.level + 1}**. `)

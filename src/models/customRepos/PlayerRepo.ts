@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from "typeorm";
+import { calculateMaxXP } from "../../structures/Util";
 import { Player } from "../Players";
 
 @EntityRepository(Player)
@@ -19,28 +20,50 @@ export class PlayerRepository extends Repository<Player> {
         });
     }
 
-    async addCoins(playerEntity: Player, coins: number): Promise<number> {
-        await this.update(playerEntity, {
-            coins: playerEntity.coins + coins
+    async addCoins(playerID: string, coins: number): Promise<number> {
+        const player = await this.findOneByPlayer(playerID);
+
+        await this.update(player, {
+            coins: player.coins + coins
         })
 
-        return playerEntity.coins + coins;
+        return player.coins + coins;
     }
 
-    async addXP(playerEntity: Player, xp: number): Promise<number> {
-        await this.update(playerEntity, {
-            xp: playerEntity.xp + xp,
+    async addXP(playerID: string, xp: number): Promise<number> {
+        const player = await this.findOneByPlayer(playerID);
+        await this.update(player, {
+            xp: player.xp + xp,
         });
 
-        return playerEntity.xp + xp
+        return player.xp + xp
     }
 
-    async levelUp(playerEntity: Player, level: number) {
-        await this.update(playerEntity, {
-            level: playerEntity.level + level,
+    async addLevel(playerID: string, level: number) {
+        const player = await this.findOneByPlayer(playerID);
+        await this.update(player, {
+            level: player.level + level
         });
 
-        return playerEntity.level + level;
+        return player.level + level
+    }
+
+    async levelUp(playerID: string, xp: number, level?: number) {
+        if (!level) level = 1;
+        const player = await this.findOneByPlayer(playerID);
+        const maxXP = calculateMaxXP(player.level);
+
+        await this.update(player, {
+            xp: xp - maxXP
+        });
+
+        const newPlayer = await this.findOneByPlayer(playerID);
+
+        await this.update(newPlayer, {
+            level: newPlayer.level + level,
+        });
+
+        return player.level + level;
     }
 
 }

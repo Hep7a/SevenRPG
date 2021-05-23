@@ -12,3 +12,10 @@ export function calculateTotalXP(xp: number, level: number) {
 
     return maxXP + xp;
 }
+
+export function checkIfLevelUp(xp: number, maxXP: number) {
+    let response: boolean = false;
+    if (xp >= maxXP) response = true;
+
+    return response;
+}

@@ -41,7 +41,7 @@ export default class Test extends FFCommand {
 
         await inventoryRepo.addItem(playerMentioned.id, item.name, wood3);
 
-        const level = await playerRepo.levelUp(player, 1);
+        const level = await playerRepo.addLevel(message.author.id, 1);
         const maxXP = calculateMaxXP(level);
 
         message.util.send(`+${wood3} to ${playerMentioned.tag}!`)
