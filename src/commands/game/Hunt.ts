@@ -1,9 +1,11 @@
 import { Message } from "discord.js";
 import { MobRepository } from "../../models/customRepos/MobRepo";
 import { PlayerRepository } from "../../models/customRepos/PlayerRepo";
-import { CommandCategoryNames, NoPlayerMessage } from "../../structures/Constants";
+import { CommandCategoryNames, MobNames, NoPlayerMessage } from "../../structures/Constants";
+import { calculateMaxXP } from "../../structures/game/CalculateStats";
+import { checkIfLevelUp } from "../../structures/game/Checks";
 import { FFCommand } from "../../structures/Structures";
-import { calculateMaxXP, checkIfLevelUp, randomizeInt } from "../../structures/Util";
+import { randomizeInt } from "../../structures/Util";
 
 export default class Hunt extends FFCommand {
     constructor() {
@@ -40,6 +42,6 @@ export default class Hunt extends FFCommand {
             const level = await playerRepo.levelUp(message.author.id, xp)
             message.util.send(`LEVEL UP! You are now **Level ${level}**!`);
         }
-        else message.util.send(`You have ${maxXP - xp}/${maxXP}XP left until **Level ${player.level + 1}**. `)
+        else message.util.send(`You have ${maxXP - xp}/${maxXP}XP left until **Level ${player.level + 1}**.`)
     }
 }

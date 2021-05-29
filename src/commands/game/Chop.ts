@@ -3,8 +3,10 @@ import { InventoryRepository } from "../../models/customRepos/InvRepo";
 import { ItemRepository } from "../../models/customRepos/ItemRepo";
 import { PlayerRepository } from "../../models/customRepos/PlayerRepo";
 import { CommandCategoryNames, ItemNames, NoPlayerMessage } from "../../structures/Constants";
+import { calculateMaxXP } from "../../structures/game/CalculateStats";
+import { checkIfLevelUp } from "../../structures/game/Checks";
 import { FFCommand } from "../../structures/Structures";
-import { calculateMaxXP, checkIfLevelUp, randomizeInt } from "../../structures/Util";
+import { randomizeInt } from "../../structures/Util";
 
 export default class Chop extends FFCommand {
     constructor() {

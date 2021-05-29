@@ -4,7 +4,7 @@ import { User } from "discord.js";
 import { PlayerRepository } from "../../../models/customRepos/PlayerRepo";
 import { CommandCategoryNames, NoPlayerMessage } from "../../../structures/Constants";
 import { FFCommand } from "../../../structures/Structures";
-import { calculateMaxXP, calculateTotalXP } from "../../../structures/Util";
+import { calculateMaxHP, calculateMaxXP, calculateTotalXP } from "../../../structures/game/CalculateStats";
 
 export default class Profile extends FFCommand {
     constructor() {
@@ -34,8 +34,9 @@ export default class Profile extends FFCommand {
 
         message.util.send(new MessageEmbed()
             .setAuthor(`${playerMentioned.tag} | Profile`, `${playerMentioned.displayAvatarURL()}`)
-            .setDescription(`**Coins:** ${player.coins}\n**Level:** ${player.level}\n**XP:** ${player.xp}/${calculateMaxXP(player.level)}`)
-            .setThumbnail(playerMentioned.displayAvatarURL())
+            .addField("**PROGRESS:**", `**Coins:** ${player.coins}\n**Level:** ${player.level}\n**XP:** ${player.xp}/${calculateMaxXP(player.level)}`)
+            .addField("**STATS:**", `**ATK:** ${player.atk}\n**DEF:** ${player.def}\n**HP:** ${player.hp}/${player.maxHP}`)
+            .setThumbnail(this.client.user.displayAvatarURL())
         )
     }
 

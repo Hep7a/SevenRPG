@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from "typeorm";
-import { calculateMaxXP } from "../../structures/Util";
+import { calculateMaxXP } from "../../structures/game/CalculateStats";
 import { Player } from "../Players";
 
 @EntityRepository(Player)
@@ -15,8 +15,13 @@ export class PlayerRepository extends Repository<Player> {
             playerID: playerID,
             coins: 0,
             xp: 0,
-            totalXP: 0,
-            level: 1
+            level: 1,
+            hp: 20,
+            maxHP: 20,
+            atk: 1,
+            def: 1,
+            seven: 1,
+            generation: 1
         });
     }
 
@@ -60,10 +65,26 @@ export class PlayerRepository extends Repository<Player> {
         const newPlayer = await this.findOneByPlayer(playerID);
 
         await this.update(newPlayer, {
-            level: newPlayer.level + level,
+            hp: newPlayer.hp + 5,
+            maxHP: newPlayer.maxHP + 5
+        });
+
+        const newerPlayer = await this.findOneByPlayer(playerID);
+
+        await this.update(newerPlayer, {
+            level: newerPlayer.level + level,
         });
 
         return player.level + level;
+    }
+
+    async takeDamage(playerID: string, hp: number) {
+        const player = await this.findOneByPlayer(playerID);
+        await this.update(player, {
+            hp: player.hp - hp
+        });
+
+        return player.hp + hp
     }
 
 }

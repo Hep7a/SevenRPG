@@ -5,8 +5,9 @@ import { ItemRepository } from "../models/customRepos/ItemRepo";
 import { PlayerRepository } from "../models/customRepos/PlayerRepo";
 import { Player } from "../models/Players";
 import { ItemNames } from "../structures/Constants";
+import { calculateMaxXP } from "../structures/game/CalculateStats";
 import { FFCommand } from "../structures/Structures";
-import { calculateMaxXP, randomizeInt } from "../structures/Util";
+import { randomizeInt } from "../structures/Util";
 
 export default class Test extends FFCommand {
     constructor() {

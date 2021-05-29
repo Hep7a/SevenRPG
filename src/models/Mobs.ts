@@ -16,5 +16,8 @@ export class Mobs {
     coins: number;
 
     @Column()
+    damage: number;
+
+    @Column()
     icon: string;
 }

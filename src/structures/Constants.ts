@@ -34,3 +34,9 @@ export enum CommandCategoryNames {
     MODERATION = "Moderation Commands",
     OTHER = "Other Commands"
 }
+
+export enum MobNames {
+    COW = "Cow",
+    PIG = "Pig",
+    CHICKEN = "Chicken"
+}

@@ -3,8 +3,10 @@ import { CollectorFilter } from "discord.js";
 import { User } from "discord.js";
 import { PlayerRepository } from "../../models/customRepos/PlayerRepo";
 import { CommandCategoryNames, NoPlayerMessage } from "../../structures/Constants";
+import { calculateMaxXP } from "../../structures/game/CalculateStats";
+import { checkIfLevelUp } from "../../structures/game/Checks";
 import { DuelStats, FFCommand } from "../../structures/Structures";
-import { calculateMaxXP, checkIfLevelUp, randomizeInt } from "../../structures/Util";
+import { randomizeInt } from "../../structures/Util";
 
 export default class Duel extends FFCommand {
     constructor() {
